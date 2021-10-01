@@ -1,7 +1,9 @@
-# Developer - t.me/Andreyoss
+# Developer - https://t.me/Andreyoss
+# Version v1.1
 
-rot13_cipher_encrypt = "abcdefghijklmnopqrstuvwxyz"
-rot13_cipher_decrypt = "zyxwvutsrqponmlkjihgfedcba"
+from random import choice
+
+rot13_cipher = "abcdefghijklmnopqrstuvwxyz"
 
 # For tests
 
@@ -13,37 +15,42 @@ reverse_dec = "CBA"
 reverse_enc = "ABC"
 rot13_enc = "hello"
 rot13_dec = "uryyb"
+random_case_enc = "hello"
+random_case_dec = "HeLlo"
+ascii_enc = "hi"
 
 class encrypt:
     @staticmethod
     def rot13(txt):
-        rot13_output = "".join([rot13_cipher_encrypt[(rot13_cipher_encrypt.find(c)+13)%26] for c in txt.lower()])
-        return rot13_output
+        return "".join([rot13_cipher[(rot13_cipher.find(c)+13)%26] for c in txt.lower()])
     @staticmethod
     def reverse(txt):
-        reverse_output = txt[::-1]
-        return reverse_output
+        return txt[::-1]
     @staticmethod
     def static_binary(txt):
         try:
            static_binary_output = bin(txt)[2:]
         except Exception:
-           raise TypeError("Must be entered Integer not String!")
+           raise TypeError("Integer required, not string!")
         return static_binary_output
     @staticmethod
     def binary(txt):
-        binary_output = ''.join(format(ord(i[0]), '08b') for i in txt)
-        return binary_output
+        return ''.join(format(ord(i[0]), '08b') for i in txt)
+    @staticmethod
+    def random_case(txt):
+        return ''.join(choice((str.upper, str.lower))(c) for c in txt)
+    @staticmethod
+    def ascii(txt):
+        # WARNING! SHIT CODE!!!
+        return str([ord(x) for x in txt]).replace('[', '').replace(']', '').replace(',', '')
 
 class decrypt:
     @staticmethod
     def reverse(txt):
-        reverse_output = txt[::-1]
-        return reverse_output
+        return txt[::-1]
     @staticmethod
     def rot13(txt):
-        rot13_output = "".join([rot13_cipher_decrypt[(rot13_cipher_decrypt.find(c)+13)%26] for c in txt.lower()])
-        return rot13_output
+        return "".join([rot13_cipher[(rot13_cipher.find(c)+13)%26] for c in txt.lower()])
     @staticmethod
     def static_binary(txt):
         try:
@@ -53,8 +60,21 @@ class decrypt:
         return static_binary_output
     @staticmethod
     def binary(txt):
-        binary_output = ''.join(chr(int(txt[i*8:i*8+8],2)) for i in range(len(txt)//8))
-        return binary_output
+        return ''.join(chr(int(txt[i*8:i*8+8],2)) for i in range(len(txt)//8))
+    @staticmethod
+    def random_case(txt):
+        return ''.join(choice((str.upper, str.lower))(c) for c in txt) # Cuz Idk how to decrypt this "shit_cipher" so I just copy N paste from encrypt to decrypt section
+    @staticmethod
+    def ascii(txt):
+        output = ""
+        try:
+            txt = list(map(int, txt.split()))
+        except Exception:
+            raise TypeError("Integer required, not string!")
+        else:
+            for i in txt:
+                output = output + chr(i)
+            return output
 
 class tests:
     @staticmethod
@@ -89,14 +109,29 @@ class tests:
     def rot13_decrypt():
         print ("Input data: "+str(rot13_dec))
         print ("Output data: "+str(decrypt.rot13(rot13_dec)))
+    @staticmethod
+    def random_case_encrypt():
+        print ("Input data: "+str(random_case_enc))
+        print ("Output data: "+str(encrypt.random_case(random_case_enc)))
+    @staticmethod
+    def random_case_decrypt():
+        print ("Input data: "+str(random_case_dec))
+        print ("Output data: "+str(decrypt.random_case(random_case_dec)))
+    @staticmethod
+    def ascii_encrypt():
+        print ("Input data: "+str(ascii_enc))
+        print ("Output data: "+str(encrypt.ascii(ascii_enc)))
+    @staticmethod
+    def ascii_decrypt():
+        print ("Input data: "+str(ascii_enc))
+        print ("Output data: "+str(encrypt.ascii(ascii_enc)))
 
 # DOCUMENTATION
 #
-# 1. How to start working with it library
+# 1. How to start working with library
 #
-# Just copy and paste this module to your project and import it
+# Just fork this module and import it
 # > import cryptographic_api
-# >
 #
 # 2. How to use it
 #
@@ -118,4 +153,32 @@ class tests:
 # > print (cryptographic_api.decrypt.binary('qwerty'))
 # TypeError(Integer must be only 0 or 1!)
 #
-# This error can be displayed if you entered wrong value (in the example is symbols from alphabet) 
+# 4. How to start encrypted text
+#
+# > exec(cryptographic_api.decrypt.binary("01110000011100100110100101101110011101000010000000101000001001110110100001100101011011000110110001101111001000000111011101101111011100100110110001100100001000010010011100101001")) # print ("hello world!")
+# hello world!
+#
+# This error can be displayed if you entered wrong value (in the example is symbols from alphabet)
+#
+# TODO:
+#
+# First layer (necessary)
+# 1. Add advanced hash algorithms (like as AES/MD5/DES and etc) - (IMPOSSIBLE)
+# 2. Fix some "awful" code moments + (Fixed)
+# 3. Rewrite our code from scratch for code beautifality - (cuz I am a very lazy ass :( )
+# 4. Add cipher sections for ciphers like rot13/reverse and binary/static_binary +- (After this code will be trashed, btw I try do it anyway :) )
+# 5. Add some new encryption/cipher algorithms + (Added: random case, ascii)
+#
+# Second layer (not necessary however must be added)
+#
+# 1. Write simple and advanced client for testing our library
+# 2. Add for developers exception handler (not in program, only template)
+# 3. Add cipher recognition (Idk why I must add it, maybe it will be useful for devs)
+#
+# Third layer (useless)
+#
+# 1. Add locales (languages) on exceptions and add auto-detect system locale for putting lang in exceptions
+# 2. Do autodownloader (template) for this library (if library missing, autodownloader download it)
+# 3. Publish it on PyPI
+# 4. Add "execute" section for code executing from encrypted text
+# 5. Change encryption algorithms output to one-line code (IDK WHY I SHOULD DO IT :D) + (LMAO, I did it)

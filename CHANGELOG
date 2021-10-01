@@ -1,0 +1,13 @@
+v1.0:
+
+* Started project
+* Added rot13/binary/static binary/reverse encryptions
+* Added tests/encrypt/decrypt classes
+
+v1.1
+
+* Fixed awful code moments
+* Changed output in exceptions
+* Added ascii/random case encryptions
+* Fixed bugs in exceptions
+* Added CHANGELOG
