@@ -18,6 +18,7 @@ rot13_dec = "uryyb"
 random_case_enc = "hello"
 random_case_dec = "HeLlo"
 ascii_enc = "hi"
+ascii_dec = "104 105"
 
 class encrypt:
     @staticmethod
@@ -123,8 +124,8 @@ class tests:
         print ("Output data: "+str(encrypt.ascii(ascii_enc)))
     @staticmethod
     def ascii_decrypt():
-        print ("Input data: "+str(ascii_enc))
-        print ("Output data: "+str(encrypt.ascii(ascii_enc)))
+        print ("Input data: "+str(ascii_dec))
+        print ("Output data: "+str(decrypt.ascii(ascii_dec)))
 
 # DOCUMENTATION
 #
