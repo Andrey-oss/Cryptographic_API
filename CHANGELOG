@@ -11,3 +11,11 @@ v1.1
 * Added ascii/random case encryptions
 * Fixed bugs in exceptions
 * Added CHANGELOG
+
+v1.2
+
+* Fixed awful code moments (Rewrote 'tests' section from scratch)
+* Added caesar (Unstable)/normal hex/static octal/static hex
+* Deleted a lot of useless code strings
+* Changed one-line output to output from variable (For debug)
+* Deleted documentation (I will add it when I do this module)

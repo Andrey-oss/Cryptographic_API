@@ -1,5 +1,5 @@
 # Developer - https://t.me/Andreyoss
-# Version v1.1
+# Version v1.2
 
 from random import choice
 
@@ -19,52 +19,121 @@ random_case_enc = "hello"
 random_case_dec = "HeLlo"
 ascii_enc = "hi"
 ascii_dec = "104 105"
+hex_enc = "777"
+hex_dec = "3019"
+static_octal_enc = "123"
+static_octal_dec = "173"
+
+def tests_io(t_input, t_output, pr):
+    if pr is "p" or pr is "P":
+        print ("Input data: "+str(t_input))
+        print ("Output data: "+str(t_output))
+    elif pr is "r" or pr is "R":
+        return "Input data: "+str(t_input)
+        return "Output data: "+str(t_output)
+    else:
+        print ("Wrong end value! Please enter P(print)/R(return)")
 
 class encrypt:
     @staticmethod
     def rot13(txt):
-        return "".join([rot13_cipher[(rot13_cipher.find(c)+13)%26] for c in txt.lower()])
+        output = "".join([rot13_cipher[(rot13_cipher.find(c)+13)%26] for c in txt.lower()])
+        return output
     @staticmethod
     def reverse(txt):
-        return txt[::-1]
+        output = txt[::-1]
+        return output
     @staticmethod
     def static_binary(txt):
         try:
-           static_binary_output = bin(txt)[2:]
+           output = bin(txt)[2:]
         except Exception:
            raise TypeError("Integer required, not string!")
-        return static_binary_output
+        return output
     @staticmethod
     def binary(txt):
-        return ''.join(format(ord(i[0]), '08b') for i in txt)
+        output = ''.join(format(ord(i[0]), '08b') for i in txt)
+        return output
     @staticmethod
     def random_case(txt):
-        return ''.join(choice((str.upper, str.lower))(c) for c in txt)
+        output = ''.join(choice((str.upper, str.lower))(c) for c in txt)
+        return output
     @staticmethod
     def ascii(txt):
-        # WARNING! SHIT CODE!!!
-        return str([ord(x) for x in txt]).replace('[', '').replace(']', '').replace(',', '')
+        output = str([ord(x) for x in txt]).replace('[', '').replace(']', '').replace(',', '')
+        return output
+    @staticmethod
+    def static_octal(txt):
+        try:
+            int(txt)
+        except Exception:
+            raise TypeError("Integer required, not string!")
+        else:
+            try:
+                output = ''.join(oct(int(txt)).lstrip("0o").rstrip("L"))
+            except Exception:
+                raise TypeError("Integer required, not string!")
+        return output
+
+    @staticmethod
+    def static_hex(txt):
+        try:
+            int(txt)
+        except Exception:
+            raise TypeError("Integer required, not string!")
+        else:
+            try:
+                output = ''.join(hex(int(txt)).lstrip("0x").rstrip("L"))
+            except Exception:
+                raise TypeError("Integer required, not string!")
+        return output
+    @staticmethod
+    def atbash(txt):
+        alphabet = ord('z') + ord('a')
+        output = ''.join([chr(alphabet - ord(s)) for s in txt])
+        return output
+    @staticmethod
+    def normal_hex(txt):
+        output = ' '.join("{:02x}".format(ord(c)) for c in txt)
+        return output
+    @staticmethod
+    # Unstable cipher!
+    def caesar(txt):
+        output = ""
+        txt = str(txt)
+        for i in range(len(txt)):
+            char = txt[i]
+            if (char.isupper()):
+                output += chr((ord(char) + 25-65) % 26 + 65)
+            else:
+                output += chr((ord(char) + 25 - 97) % 26 + 97)
+        return output
+    # Unstable cipher!
 
 class decrypt:
     @staticmethod
     def reverse(txt):
-        return txt[::-1]
+        output = txt[::-1]
+        return output
     @staticmethod
     def rot13(txt):
-        return "".join([rot13_cipher[(rot13_cipher.find(c)+13)%26] for c in txt.lower()])
+        output = "".join([rot13_cipher[(rot13_cipher.find(c)+13)%26] for c in txt.lower()])
+        return output
     @staticmethod
     def static_binary(txt):
         try:
-           static_binary_output = int(str(txt), 2)
+           output = int(str(txt), 2)
         except Exception:
-           raise TypeError("Integer must be only 0 or 1!")
-        return static_binary_output
+           raise ValueError("Integer must be only 0 or 1!")
+        return output
     @staticmethod
     def binary(txt):
-        return ''.join(chr(int(txt[i*8:i*8+8],2)) for i in range(len(txt)//8))
+        output = ''.join(chr(int(str(txt)[i*8:i*8+8],2)) for i in range(len(str(txt))//8))
+        return output
     @staticmethod
     def random_case(txt):
-        return ''.join(choice((str.upper, str.lower))(c) for c in txt) # Cuz Idk how to decrypt this "shit_cipher" so I just copy N paste from encrypt to decrypt section
+        output = ''.join(choice((str.upper, str.lower))(c) for c in txt)
+        return output
     @staticmethod
     def ascii(txt):
         output = ""
@@ -76,110 +145,87 @@ class decrypt:
             for i in txt:
                 output = output + chr(i)
             return output
+    @staticmethod
+    def normal_hex(txt):
+        bits = ""
+        txt = txt.replace(' ', '')
+        for x in range(0, len(txt), 2):
+            bits += chr(int(txt[x:x+2], 16))
+        return bits
+    @staticmethod
+    def static_hex(txt):
+        output = int(txt, base=16)
+        return output
+    @staticmethod
+    def static_octal(txt):
+        output = int(''.join(str(txt)), 8)
+        return output
+    @staticmethod
+    def atbash(txt):
+        alphabet = ord('z') + ord('a')
+        output = ''.join([chr(alphabet - ord(s)) for s in txt])
+        return output
+    @staticmethod
+    # Unstable cipher!
+    def caesar(txt, shift):
+        output = [ord(x)    if x != " " else -1  for x in txt]
+        output = [o - shift    if o != -1  else -1  for o in output]
+        output = str([chr(i)    if i != -1  else " " for i in output]).replace('[', '').replace("'", '').replace(']', '').replace(',', '')
+        return output
+    # Unstable cipher!
 
 class tests:
     @staticmethod
     def static_binary_encrypt():
-        print ("Input data: "+str(static_binary_enc))
-        print ("Output data: "+str(encrypt.static_binary(static_binary_enc)))
+        tests_io(static_binary_enc, encrypt.static_binary(static_binary_enc), 'p')
     @staticmethod
     def static_binary_decrypt():
-        print ("Input data: "+str(static_binary_dec))
-        print ("Output data: "+str(decrypt.static_binary(static_binary_dec)))
+        tests_io(static_binary_dec, decrypt.static_binary(static_binary_dec), 'p')
     @staticmethod
     def binary_encrypt():
-        print ("Input data: "+str(binary_enc))
-        print ("Output data: "+str(encrypt.binary(binary_enc)))
+        tests_io(binary_enc, encrypt.binary(binary_enc), 'p')
     @staticmethod
     def binary_decrypt():
-        print ("Input data: "+str(binary_dec))
-        print ("Output data: "+str(decrypt.binary(binary_dec)))
+        tests_io(binary_dec, decrypt.binary(binary_dec), 'p')
     @staticmethod
     def reverse_encrypt():
-        print ("Input data: "+str(reverse_enc))
-        print ("Output data: "+str(encrypt.reverse(reverse_enc)))
+        tests_io(reverse_enc, encrypt.reverse(reverse_enc), 'p')
     @staticmethod
     def reverse_decrypt():
-        print ("Input data: "+str(reverse_dec))
-        print ("Output data: "+str(decrypt.reverse(reverse_dec)))
+        tests_io(reverse_dec, decrypt.reverse(reverse_dec), 'p')
     @staticmethod
     def rot13_encrypt():
-        print ("Input data: "+str(rot13_enc))
-        print ("Output data: "+str(encrypt.rot13(rot13_enc)))
+        tests_io(rot13_enc, encrypt.rot13(rot13_enc), 'p')
     @staticmethod
     def rot13_decrypt():
-        print ("Input data: "+str(rot13_dec))
-        print ("Output data: "+str(decrypt.rot13(rot13_dec)))
+        tests_io(rot13_dec, decrypt.rot13(rot13_dec), 'p')
     @staticmethod
     def random_case_encrypt():
-        print ("Input data: "+str(random_case_enc))
-        print ("Output data: "+str(encrypt.random_case(random_case_enc)))
+        tests_io(random_case_enc, encrypt.random_case(random_case_enc), 'p')
     @staticmethod
     def random_case_decrypt():
-        print ("Input data: "+str(random_case_dec))
-        print ("Output data: "+str(decrypt.random_case(random_case_dec)))
+        tests_io(random_case_dec, decrypt.random_case(random_case_dec), 'p')
     @staticmethod
     def ascii_encrypt():
-        print ("Input data: "+str(ascii_enc))
-        print ("Output data: "+str(encrypt.ascii(ascii_enc)))
+        tests_io(ascii_enc, encrypt.ascii(ascii_enc), 'p')
     @staticmethod
     def ascii_decrypt():
-        print ("Input data: "+str(ascii_dec))
-        print ("Output data: "+str(decrypt.ascii(ascii_dec)))
-
-# DOCUMENTATION
-#
-# 1. How to start working with library
-#
-# Just fork this module and import it
-# > import cryptographic_api
-#
-# 2. How to use it
-#
-# > print (cryptographic_api.encrypt/decrypt.rot13/binary/static_binary/reverse(SOME_TEXT))
-# Example for encrypt:
-# > print (cryptographic_api.encrypt.rot13('hello'))
-# uryyb
-#
-# > Example for decrypt:
-# > print (cryptographic_api.decrypt.rot13('uryyb'))
-# hello
-# Also you can test how cipher algorithms work
-# > print (cryptographic_api.tests.binary_encrypt())
-# Input data: ABC
-# Output data: 010000010100001001000011
-#
-# 3. What about exceptions
-#
-# > print (cryptographic_api.decrypt.binary('qwerty'))
-# TypeError(Integer must be only 0 or 1!)
-#
-# 4. How to start encrypted text
-#
-# > exec(cryptographic_api.decrypt.binary("01110000011100100110100101101110011101000010000000101000001001110110100001100101011011000110110001101111001000000111011101101111011100100110110001100100001000010010011100101001")) # print ("hello world!")
-# hello world!
-#
-# This error can be displayed if you entered wrong value (in the example is symbols from alphabet)
-#
-# TODO:
-#
-# First layer (necessary)
-# 1. Add advanced hash algorithms (like as AES/MD5/DES and etc) - (IMPOSSIBLE)
-# 2. Fix some "awful" code moments + (Fixed)
-# 3. Rewrite our code from scratch for code beautifality - (cuz I am a very lazy ass :( )
-# 4. Add cipher sections for ciphers like rot13/reverse and binary/static_binary +- (After this code will be trashed, btw I try do it anyway :) )
-# 5. Add some new encryption/cipher algorithms + (Added: random case, ascii)
-#
-# Second layer (not necessary however must be added)
-#
-# 1. Write simple and advanced client for testing our library
-# 2. Add for developers exception handler (not in program, only template)
-# 3. Add cipher recognition (Idk why I must add it, maybe it will be useful for devs)
-#
-# Third layer (useless)
-#
-# 1. Add locales (languages) on exceptions and add auto-detect system locale for putting lang in exceptions
-# 2. Do autodownloader (template) for this library (if library missing, autodownloader download it)
-# 3. Publish it on PyPI
-# 4. Add "execute" section for code executing from encrypted text
-# 5. Change encryption algorithms output to one-line code (IDK WHY I SHOULD DO IT :D) + (LMAO, I did it)
+        tests_io(ascii_dec, decrypt.ascii(ascii_dec), 'p')
+    @staticmethod
+    def static_hex_encrypt():
+        tests_io(hex_enc, encrypt.static_hex(hex_enc), 'p')
+    @staticmethod
+    def static_hex_decrypt():
+        tests_io(hex_dec, decrypt.static_hex(hex_dec), 'p')
+    @staticmethod
+    def static_octal_encrypt():
+        tests_io(static_octal_enc, encrypt.static_octal(static_octal_enc), 'p')
+    @staticmethod
+    def static_octal_decrypt():
+        tests_io(static_octal_dec, decrypt.static_octal(static_octal_dec), 'p')
+    @staticmethod
+    def normal_hex_encrypt():
+        tests_io(hex_enc, encrypt.normal_hex(hex_enc), 'p')
+    @staticmethod
+    def normal_hex_decrypt():
+        tests_io(hex_dec, decrypt.normal_hex(hex_dec), 'p')
