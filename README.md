@@ -5,8 +5,6 @@
 
 A simple Python-based library that provides a wide variety of encoding and decoding (encryption/decryption) algorithms for basic string and integer transformations.
 
-This project was created
-
 ---
 
 ## 🚀 Features
